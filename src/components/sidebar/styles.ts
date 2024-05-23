@@ -22,7 +22,7 @@ export const Container = styled.aside`
   min-width: 5rem;
   height: 100vh;
   position: relative;
-  background-color: #EDF3F7;
+  background-color: #ffffff;
 
   box-shadow: 0 0 8px rgba(0,0,0,.1), 1px 0 0 rgba(0,0,0,.05);
 
@@ -71,7 +71,8 @@ export const Footer = styled.div`
 export const Content = styled.div`
   width: 100%;
   max-height: 75vh;
-  /* padding: 10px; */
+  overflow-y: auto;
+  flex: 1;
 `;
 
 export const Item = styled.div`

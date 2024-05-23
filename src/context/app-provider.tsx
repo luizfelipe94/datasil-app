@@ -18,8 +18,10 @@ const AppProvider: React.FC<Props> = ({ children }) => {
   return (
     <ThemeProvider theme={{ }}>
       <ChakraProvider>
-        <Sidebar isOpen={isSidebarOpen} setOpen={toggleSidebar}/>
-        {children}
+        <div style={{ display: "flex", flexDirection: "row" }}>
+          <Sidebar isOpen={isSidebarOpen} setOpen={toggleSidebar}/>
+          {children}
+        </div>
       </ChakraProvider>
     </ThemeProvider>
   );
