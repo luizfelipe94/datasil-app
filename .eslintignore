@@ -1,0 +1,10 @@
+node_modules
+.vscode
+coverage
+public
+dist
+*.scss
+*.json
+*.d.ts
+config/*
+jest.config.ts
