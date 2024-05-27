@@ -4,6 +4,7 @@ import { SiAbbrobotstudio } from "react-icons/si";
 import { GoWorkflow } from "react-icons/go";
 import { GrCatalog } from "react-icons/gr";
 import { FaChartArea } from "react-icons/fa";
+import { CiFolderOn } from "react-icons/ci";
 import { Link } from "react-router-dom";
 import { Profile } from "../profile/profile";
 import { DatasilLogo } from "@/assets";
@@ -15,14 +16,14 @@ const menuItems = [
     link: "/home",
   },
   {
+    title: "Storage",
+    icon: <CiFolderOn />,
+    link: "/storage",
+  },
+  {
     title: "Jobs",
     icon: <SiAbbrobotstudio />,
     link: "/jobs",
-  },
-  {
-    title: "Workflows",
-    icon: <GoWorkflow />,
-    link: "/workflows",
   },
   {
     title: "Catalog",
@@ -33,6 +34,11 @@ const menuItems = [
     title: "Visualizer",
     icon: <FaChartArea />,
     link: "/visualizer",
+  },
+  {
+    title: "Workflows",
+    icon: <GoWorkflow />,
+    link: "/workflows",
   },
 ];
 

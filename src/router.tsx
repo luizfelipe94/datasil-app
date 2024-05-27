@@ -7,6 +7,7 @@ import { Catalog } from "./pages/catalog/catalog";
 import { Visualizer } from "./pages/visualizer/visualizer";
 import { CreateJobEditor } from "./pages/jobs/create/create-job-editor";
 import { CreateJobVisual } from "./pages/jobs/create/create-job-visual";
+import { Storage } from "./pages/storage/storage";
 
 export const Router = () => {
 
@@ -27,6 +28,7 @@ export const Router = () => {
           <Route path="/jobs/new-editor" element={<CreateJobEditor />} />
           <Route path="/jobs/new-visual" element={<CreateJobVisual />} />
           <Route path="/jobs/:id" element={<Jobs />} />
+          <Route path="/storage" element={<Storage />} />
           <Route path="/workflows" element={<Workflows />} />
           <Route path="/catalog" element={<Catalog />} />
           <Route path="/visualizer" element={<Visualizer />} />
