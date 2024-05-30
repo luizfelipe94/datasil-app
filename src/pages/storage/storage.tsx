@@ -1,7 +1,37 @@
 import { PageLayoyt } from "@/components/page-layout/page-layout";
-import { Button, Card, CardBody, CardFooter, CardHeader, Heading, Table, TableContainer, Tbody, Td, Th, Thead, Tr } from "@chakra-ui/react";
+import api from "@/services/api";
+import { ReadFilesDTO } from "@/services/dto/read-files-dto";
+import { Button, Card, CardBody, CardFooter, CardHeader, Heading, Table, TableContainer, Tbody, Td, Th, Thead, Tr, useToast } from "@chakra-ui/react";
+import { useQuery } from "@tanstack/react-query";
+import { useEffect, useState } from "react";
+import { format } from "date-fns";
+import { formatBytes } from "@/utils/files";
+
+const fetchFiles = async (page = 1): Promise<ReadFilesDTO[]> => {
+  const res = await api.get<ReadFilesDTO[]>("/storage/files");
+  return res.data;
+};
 
 export const Storage = () => {
+  const toast = useToast();
+  const [page, setPage] = useState(1);
+  const { data: files, isError } = useQuery({
+    queryFn: () => fetchFiles(page),
+    queryKey: ["list-files", page],
+    retry: false,
+  });
+
+  console.log(files);
+  useEffect(() => {
+    if (isError) {
+      toast({
+        title: "Error to list files",
+        duration: 2000,
+        status: "error"
+      });
+    }
+  }, [isError]);
+
   return (
     <PageLayoyt>
       <div style={{ display: "flex", flexDirection: "row", justifyContent: "space-around", gap: "50px" }}>
@@ -51,48 +81,14 @@ export const Storage = () => {
                 </Tr>
               </Thead>
               <Tbody>
-                <Tr>
-                  <Td>arquivo1</Td>
-                  <Td>csv</Td>
-                  <Td>1 MB</Td>
-                  <Td>18-04-2024 10:19:27</Td>
-                </Tr>
-                <Tr>
-                  <Td>arquivo1</Td>
-                  <Td>csv</Td>
-                  <Td>1 MB</Td>
-                  <Td>18-04-2024 10:19:27</Td>
-                </Tr>
-                <Tr>
-                  <Td>arquivo1</Td>
-                  <Td>csv</Td>
-                  <Td>1 MB</Td>
-                  <Td>18-04-2024 10:19:27</Td>
-                </Tr>
-                <Tr>
-                  <Td>arquivo1</Td>
-                  <Td>csv</Td>
-                  <Td>1 MB</Td>
-                  <Td>18-04-2024 10:19:27</Td>
-                </Tr>
-                <Tr>
-                  <Td>arquivo1</Td>
-                  <Td>csv</Td>
-                  <Td>1 MB</Td>
-                  <Td>18-04-2024 10:19:27</Td>
-                </Tr>
-                <Tr>
-                  <Td>arquivo1</Td>
-                  <Td>csv</Td>
-                  <Td>1 MB</Td>
-                  <Td>18-04-2024 10:19:27</Td>
-                </Tr>
-                <Tr>
-                  <Td>arquivo1</Td>
-                  <Td>csv</Td>
-                  <Td>1 MB</Td>
-                  <Td>18-04-2024 10:19:27</Td>
-                </Tr>
+                {files && files.map((file) => (
+                  <Tr key={file.id}>
+                    <Td>{file.name}</Td>
+                    <Td>{file.extension}</Td>
+                    <Td>{formatBytes(file.size)}</Td>
+                    <Td>{format(file.createdAt, "dd/MM/yyyy HH:mm:ss")}</Td>
+                  </Tr>
+                ))}
               </Tbody>
             </Table>
           </TableContainer>
