@@ -1,20 +1,28 @@
 import { PageLayoyt } from "@/components/page-layout/page-layout";
 import api from "@/services/api";
 import { ReadFilesDTO } from "@/services/dto/storage/read-files-dto";
-import { Button, Card, CardBody, CardFooter, CardHeader, Heading, Table, TableContainer, Tbody, Td, Th, Thead, Tr, useToast } from "@chakra-ui/react";
+import { Button, Card, CardBody, CardFooter, CardHeader, Heading, Table, TableContainer, Tbody, Td, Th, Thead, Tr, useDisclosure, useToast } from "@chakra-ui/react";
 import { useQuery } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
 import { format } from "date-fns";
 import { formatBytes } from "@/utils/files";
 import { PageMetaDTO } from "@/services/dto/shared/page-meta-dto";
 import Pagination from "@/components/pagination/pagination";
+import { UploadModal } from "./components/upload-modal";
 
 const fetchFiles = async (page = 1): Promise<PageMetaDTO<ReadFilesDTO>> => {
   const res = await api.get<PageMetaDTO<ReadFilesDTO>>(`/storage/files?page=${page}`);
   return res.data;
 };
 
+const fetchStats = async (page = 1): Promise<{ size: number; count: number; average: number }> => {
+  const res = await api.get<{ size: number; count: number; average: number }>("/storage/stats");
+  return res.data;
+};
+
 export const Storage = () => {
+
+  const { isOpen, onOpen, onClose } = useDisclosure();
   const toast = useToast();
   const [page, setPage] = useState(1);
   const { data: files, isError } = useQuery({
@@ -22,8 +30,12 @@ export const Storage = () => {
     queryKey: ["list-files", page],
     retry: false,
   });
+  const { data: stats, isError: isErrorStats } = useQuery({
+    queryFn: () => fetchStats(),
+    queryKey: ["get-stats"],
+    retry: false,
+  });
 
-  console.log(files);
   useEffect(() => {
     if (isError) {
       toast({
@@ -32,7 +44,14 @@ export const Storage = () => {
         status: "error"
       });
     }
-  }, [isError]);
+    if (isErrorStats) {
+      toast({
+        title: "Error fetch stats",
+        duration: 2000,
+        status: "error"
+      });
+    }
+  }, [isError, isErrorStats]);
 
   return (
     <PageLayoyt>
@@ -40,7 +59,7 @@ export const Storage = () => {
         <Card width="100%">
           <CardHeader>
             <div style={{ display: "flex", flexDirection: "column" }}>
-              <Heading size='lg' fontSize='50px' textAlign="center" width="100%" color="#0f4d8d">50 GB</Heading>
+              <Heading size='lg' fontSize='50px' textAlign="center" width="100%" color="#0f4d8d">{formatBytes(stats?.size || 0)}</Heading>
               <Heading size="md" textAlign="center" width="100%" color="#696d70">Storage Space</Heading>
             </div>
           </CardHeader>
@@ -48,7 +67,7 @@ export const Storage = () => {
         <Card width="100%">
           <CardHeader>
             <div style={{ display: "flex", flexDirection: "column" }}>
-              <Heading size='lg' fontSize='50px' textAlign="center" width="100%" color="#0f4d8d">60 K</Heading>
+              <Heading size='lg' fontSize='50px' textAlign="center" width="100%" color="#0f4d8d">{stats?.count || 0}</Heading>
               <Heading size="md" textAlign="center" width="100%" color="#696d70">Files Count</Heading>
             </div>
           </CardHeader>
@@ -56,7 +75,7 @@ export const Storage = () => {
         <Card width="100%">
           <CardHeader>
             <div style={{ display: "flex", flexDirection: "column" }}>
-              <Heading size='lg' fontSize='50px' textAlign="center" width="100%" color="#0f4d8d">120 KB</Heading>
+              <Heading size='lg' fontSize='50px' textAlign="center" width="100%" color="#0f4d8d">{formatBytes(stats?.average || 0)}</Heading>
               <Heading size="md" textAlign="center" width="100%" color="#696d70">Average Size</Heading>
             </div>
           </CardHeader>
@@ -67,7 +86,7 @@ export const Storage = () => {
           <div style={{ display: "flex", flexDirection: "row", justifyContent: "space-between" }}>
             <Heading size="md">Files</Heading>
             <div>
-              <Button>Upload</Button>
+              <Button onClick={onOpen}>Upload</Button>
             </div>
           </div>
         </CardHeader>
@@ -108,6 +127,7 @@ export const Storage = () => {
           </div>
         </CardFooter>
       </Card>
+      <UploadModal isOpen={isOpen} onClose={onClose}/>
     </PageLayoyt>
   );
 };
