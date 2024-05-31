@@ -1,14 +1,16 @@
 import { PageLayoyt } from "@/components/page-layout/page-layout";
 import api from "@/services/api";
-import { ReadFilesDTO } from "@/services/dto/read-files-dto";
+import { ReadFilesDTO } from "@/services/dto/storage/read-files-dto";
 import { Button, Card, CardBody, CardFooter, CardHeader, Heading, Table, TableContainer, Tbody, Td, Th, Thead, Tr, useToast } from "@chakra-ui/react";
 import { useQuery } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
 import { format } from "date-fns";
 import { formatBytes } from "@/utils/files";
+import { PageMetaDTO } from "@/services/dto/shared/page-meta-dto";
+import Pagination from "@/components/pagination/pagination";
 
-const fetchFiles = async (page = 1): Promise<ReadFilesDTO[]> => {
-  const res = await api.get<ReadFilesDTO[]>("/storage/files");
+const fetchFiles = async (page = 1): Promise<PageMetaDTO<ReadFilesDTO>> => {
+  const res = await api.get<PageMetaDTO<ReadFilesDTO>>(`/storage/files?page=${page}`);
   return res.data;
 };
 
@@ -81,7 +83,7 @@ export const Storage = () => {
                 </Tr>
               </Thead>
               <Tbody>
-                {files && files.map((file) => (
+                {files?.data && files.data.map((file) => (
                   <Tr key={file.id}>
                     <Td>{file.name}</Td>
                     <Td>{file.extension}</Td>
@@ -94,15 +96,16 @@ export const Storage = () => {
           </TableContainer>
         </CardBody>
         <CardFooter>
-          {/* <ReactPaginate
-            breakLabel="..."
-            nextLabel="next >"
-            onPageChange={() => {console.log("page change");}}
-            pageRangeDisplayed={5}
-            pageCount={10}
-            previousLabel="< previous"
-            renderOnZeroPageCount={null}
-          /> */}
+          <div style={{ display: "flex", alignContent: "center", justifyContent: "flex-end", width: "100%" }}>
+            <Pagination
+              initialPage={page}
+              itemsPerPage={10}
+              pageCount={files?.pageCount || 0}
+              totalItems={files?.itemCount || 0}
+              type="simple"
+              onSelect={(page) => setPage(page)}
+            />
+          </div>
         </CardFooter>
       </Card>
     </PageLayoyt>
