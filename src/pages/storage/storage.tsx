@@ -15,7 +15,7 @@ const fetchFiles = async (page = 1): Promise<PageMetaDTO<ReadFilesDTO>> => {
   return res.data;
 };
 
-const fetchStats = async (page = 1): Promise<{ size: number; count: number; average: number }> => {
+const fetchStats = async (): Promise<{ size: number; count: number; average: number }> => {
   const res = await api.get<{ size: number; count: number; average: number }>("/storage/stats");
   return res.data;
 };

@@ -8,6 +8,7 @@ import { Visualizer } from "./pages/visualizer/visualizer";
 import { CreateJobEditor } from "./pages/jobs/create/create-job-editor";
 import { CreateJobVisual } from "./pages/jobs/create/create-job-visual";
 import { Storage } from "./pages/storage/storage";
+import { Dashboard } from "./pages/visualizer/dashboard";
 
 export const Router = () => {
 
@@ -16,7 +17,6 @@ export const Router = () => {
       <Outlet />
     </AppProvider>
   );
-
 
   return (
     <BrowserRouter>
@@ -33,6 +33,7 @@ export const Router = () => {
           <Route path="/workflows" element={<Workflows />} />
           <Route path="/catalog" element={<Catalog />} />
           <Route path="/visualizer" element={<Visualizer />} />
+          <Route path="/visualizer/:id" element={<Dashboard />} />
         </Route>
       </Routes>
     </BrowserRouter>

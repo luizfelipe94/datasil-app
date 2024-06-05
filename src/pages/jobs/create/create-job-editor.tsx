@@ -2,7 +2,6 @@ import { useState } from "react";
 import { FaEdit } from "react-icons/fa";
 import { IoIosArrowDropdownCircle } from "react-icons/io";
 import { PageLayoyt } from "@/components/page-layout/page-layout";
-import Editor, { DiffEditor, useMonaco, loader } from "@monaco-editor/react";
 import { Button,
   Card, 
   CardBody, 
@@ -25,7 +24,6 @@ import { Button,
   Tabs, 
   useEditableControls 
 } from "@chakra-ui/react";
-import { pythonCode } from "./python-code";
 import { Script } from "./tabs/script";
 
 export const CreateJobEditor = () => {
