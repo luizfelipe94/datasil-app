@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { ThemeProvider } from "styled-components";
 import { Sidebar } from "../components/sidebar/sidebar";
-import { ChakraProvider } from "@chakra-ui/react";
 
 type Props = {
   children: React.ReactNode;
@@ -16,13 +15,11 @@ const AppProvider: React.FC<Props> = ({ children }) => {
   };
 
   return (
-    <ThemeProvider theme={{ }}>
-      <ChakraProvider>
-        <div style={{ display: "flex", flexDirection: "row" }}>
-          <Sidebar isOpen={isSidebarOpen} setOpen={toggleSidebar}/>
-          {children}
-        </div>
-      </ChakraProvider>
+    <ThemeProvider theme={{}}>
+      <div style={{ display: "flex", flexDirection: "row" }}>
+        <Sidebar isOpen={isSidebarOpen} setOpen={toggleSidebar} />
+        {children}
+      </div>
     </ThemeProvider>
   );
 };
