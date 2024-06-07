@@ -71,7 +71,7 @@ export const Dashboard = () => {
               </div>
             </div>
             <div style={{ display: "flex", flexDirection: "row", height: "80vh", gap: "5px" }}>
-              <div style={{ width: "100%", border: "1px solid #e6e5e5", padding: "5px", backgroundColor: "#F7F7F7", overflowY: "scroll" }}>
+              <div style={{ width: "100%", border: "1px solid #e6e5e5",  backgroundColor: "#e0e2ec81", overflowY: "scroll" }}>
                 <ResponsiveReactGridLayout
                   className="layout"
                   cols={{ lg: 12, md: 10, sm: 6, xs: 4, xxs: 2 }}
@@ -96,7 +96,6 @@ export const Dashboard = () => {
         finalFocusRef={btnRef}
         size="sm"
       >
-        {/* <DrawerOverlay /> */}
         <DrawerContent>
           <DrawerCloseButton />
           <DrawerHeader>My Charts</DrawerHeader>

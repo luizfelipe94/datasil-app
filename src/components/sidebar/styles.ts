@@ -80,12 +80,15 @@ export const Item = styled.div`
   flex-direction: row;
   justify-content: flex-start;
   align-items: center;
-  gap: 10px;
+  gap: 5px;
   width: 100%;
-  height: 50px;
+  padding: 5px;
+  margin-left: 15px;
+`;
+
+export const ItemHover = styled.div`
   cursor: pointer;
   &:hover {
     background-color: #DCE2E7;
   }
-  padding: 10px;
 `;

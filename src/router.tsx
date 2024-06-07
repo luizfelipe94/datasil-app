@@ -9,6 +9,7 @@ import { CreateJobEditor } from "./pages/jobs/create/create-job-editor";
 import { CreateJobVisual } from "./pages/jobs/create/create-job-visual";
 import { Storage } from "./pages/storage/storage";
 import { Dashboard } from "./pages/visualizer/dashboard";
+import { Login } from "./pages/login/login";
 
 export const Router = () => {
 
@@ -21,7 +22,7 @@ export const Router = () => {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/login" element={<div>login</div>}/>
+        <Route path="/login" element={<Login />}/>
         <Route path="/" element={<Layout />}>
           <Route path="/" element={<Home />} />
           <Route path="/home" element={<Home />} />
