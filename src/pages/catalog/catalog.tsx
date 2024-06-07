@@ -21,6 +21,9 @@ export const Catalog = () => {
           <TabPanel>
             <p>two!</p>
           </TabPanel>
+          <TabPanel>
+            <p>three!</p>
+          </TabPanel>
         </TabPanels>
       </Tabs>
     </PageLayoyt>

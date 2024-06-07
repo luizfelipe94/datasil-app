@@ -4,6 +4,8 @@ import reportWebVitals from "./reportWebVitals";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import GlobalStyle from "./styles/global";
 import { Router } from "./router";
+import { ChakraProvider } from "@chakra-ui/react";
+import { AuthProvider } from "./context/auth-provider";
 
 const root = ReactDOM.createRoot(
   document.getElementById("root") as HTMLElement
@@ -12,12 +14,16 @@ const root = ReactDOM.createRoot(
 const client = new QueryClient();
 
 root.render(
-  <React.StrictMode>
+  // <React.StrictMode>
+  <AuthProvider>
     <QueryClientProvider client={client}>
       <GlobalStyle />
-      <Router />
+      <ChakraProvider>
+        <Router />
+      </ChakraProvider>
     </QueryClientProvider>
-  </React.StrictMode>
+  </AuthProvider>
+  // </React.StrictMode>
 );
 
 // If you want to start measuring performance in your app, pass a function

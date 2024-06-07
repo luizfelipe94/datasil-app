@@ -71,7 +71,6 @@ export const Footer = styled.div`
 export const Content = styled.div`
   width: 100%;
   max-height: 75vh;
-  overflow-y: auto;
   flex: 1;
 `;
 

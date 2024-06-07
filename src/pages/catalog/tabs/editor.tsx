@@ -1,9 +1,9 @@
-import { Text, Button, Card, Divider, FormControl, FormLabel, Heading, Select, Tag, Table, TableContainer, Tbody, Td, Tfoot, Th, Thead, Tr } from "@chakra-ui/react";
-import { MdDelete, MdOutlineRefresh } from "react-icons/md";
-import { Editor as MEditor, useMonaco } from "@monaco-editor/react";
-import * as ReactTabs from "react-tabs";
 import "react-tabs/style/react-tabs.css";
 import "./editor.css";
+import * as ReactTabs from "react-tabs";
+import { Text, Button, Card, Divider, FormControl, FormLabel, Heading, Select, Tag, Table, TableContainer, Tbody, Td, Th, Thead, Tr } from "@chakra-ui/react";
+import { MdDelete, MdOutlineRefresh } from "react-icons/md";
+import { Editor as MEditor, useMonaco } from "@monaco-editor/react";
 import { useEffect, useRef, useState } from "react";
 import { FaPlay } from "react-icons/fa";
 
@@ -102,18 +102,6 @@ export const Editor = () => {
                     <span><MdDelete color="#ff0000" size={20}/></span>
                   </div>
                 </ReactTabs.Tab>
-                <ReactTabs.Tab>
-                  <div style={{ display: "flex", flexDirection: "row", gap: "10px", alignItems: "center", justifyContent: "space-between" }}>
-                    <span>Query 2</span>
-                    <span><MdDelete color="#ff0000" size={20}/></span>
-                  </div>
-                </ReactTabs.Tab>
-                <ReactTabs.Tab>
-                  <div style={{ display: "flex", flexDirection: "row", gap: "10px", alignItems: "center", justifyContent: "space-between" }}>
-                    <span>Query 3</span>
-                    <span><MdDelete color="#ff0000" size={20}/></span>
-                  </div>
-                </ReactTabs.Tab>
                 <ReactTabs.Tab>+</ReactTabs.Tab>
               </ReactTabs.TabList>
               <ReactTabs.TabPanel>
@@ -128,26 +116,7 @@ export const Editor = () => {
                 />
               </ReactTabs.TabPanel>
               <ReactTabs.TabPanel>
-                <MEditor 
-                  height="70vh" 
-                  defaultLanguage="sql" 
-                  theme="datasil" 
-                  defaultValue={query}
-                  onMount={onMount} 
-                  value={currentQuery} 
-                  options={{ minimap: { enabled: false } }}                  
-                />
-              </ReactTabs.TabPanel>
-              <ReactTabs.TabPanel>
-                <MEditor 
-                  height="70vh" 
-                  defaultLanguage="sql" 
-                  theme="datasil" 
-                  defaultValue={query}
-                  onMount={onMount} 
-                  value={currentQuery} 
-                  options={{ minimap: { enabled: false } }}                  
-                />
+                PLUS
               </ReactTabs.TabPanel>
             </ReactTabs.Tabs>
           </div>
