@@ -11,6 +11,7 @@ import Pagination from "@/components/pagination/pagination";
 import { UploadModal } from "./components/upload-modal";
 import { FileIcon } from "./components/file-icon";
 import { TrHover } from "@/styles/styles";
+import { CreateFolderModal } from "./components/create-folder-modal";
 
 const fetchFiles = async (page = 1, depth = 0): Promise<PageMetaDTO<ReadFilesDTO>> => {
   const res = await api.get<PageMetaDTO<ReadFilesDTO>>(`/storage/files?page=${page}&depth=${depth}`);
@@ -25,7 +26,8 @@ const fetchStats = async (): Promise<{ size: number; count: number; average: num
 export const Storage = () => {
 
   const toast = useToast();
-  const { isOpen, onOpen, onClose } = useDisclosure();
+  const disclosureUpload = useDisclosure();
+  const disclosureFolder = useDisclosure();
   const drawerDisclosure = useDisclosure();
   const [page, setPage] = useState(1);
   const fileRef = useRef<any>();
@@ -118,8 +120,8 @@ export const Storage = () => {
               </Breadcrumb>
             </div>
             <div style={{ display: "flex", gap: "20px" }}>
-              <Button colorScheme="blue" onClick={onOpen}>Upload</Button>
-              <Button>Create Folder</Button>
+              <Button colorScheme="blue" onClick={disclosureUpload.onOpen}>Upload</Button>
+              <Button onClick={disclosureFolder.onOpen}>Create Folder</Button>
             </div>
           </div>
         </CardHeader>
@@ -165,7 +167,8 @@ export const Storage = () => {
           </div>
         </CardFooter>
       </Card>
-      <UploadModal isOpen={isOpen} onClose={onClose} path={currentFolder.path} />
+      <UploadModal isOpen={disclosureUpload.isOpen} onClose={disclosureUpload.onClose} path={currentFolder.path} />
+      <CreateFolderModal isOpen={disclosureFolder.isOpen} onClose={disclosureFolder.onClose} />
       <Drawer
         isOpen={drawerDisclosure.isOpen}
         placement='right'
