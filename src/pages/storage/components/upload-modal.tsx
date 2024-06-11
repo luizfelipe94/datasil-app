@@ -26,7 +26,7 @@ type File = {
   progress: number;
 };
 
-export const UploadModal = ({ isOpen, onClose }: { isOpen: boolean, onClose: () => void }) => {
+export const UploadModal = ({ isOpen, onClose, path }: { isOpen: boolean, onClose: () => void, path: string }) => {
   const queryClient = useQueryClient();
   const toast = useToast();
   const inputRef = useRef<any>();
@@ -86,6 +86,7 @@ export const UploadModal = ({ isOpen, onClose }: { isOpen: boolean, onClose: () 
   const submitFile = (file: File) => {
     const formData = new FormData();
     formData.append("file", file.file);
+    formData.append("path", path);
     return api.post("/storage/files", formData, {
       onUploadProgress: (e) => {
         if (e.total) {

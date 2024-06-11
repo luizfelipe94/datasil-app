@@ -5,4 +5,6 @@ export type ReadFilesDTO = {
   size: number;
   contentType: string;
   createdAt: string;
+  depth: number;
+  path: string;
 }

@@ -1,17 +1,19 @@
 import { PageLayoyt } from "@/components/page-layout/page-layout";
 import api from "@/services/api";
 import { ReadFilesDTO } from "@/services/dto/storage/read-files-dto";
-import { Button, Card, CardBody, CardFooter, CardHeader, Heading, Table, TableContainer, Tbody, Td, Th, Thead, Tr, useDisclosure, useToast } from "@chakra-ui/react";
+import { Button, Card, CardBody, CardFooter, CardHeader, Drawer, DrawerBody, DrawerContent, DrawerFooter, Heading, Table, Breadcrumb, TableContainer, Tbody, Td, Th, Thead, Tr, useDisclosure, useToast, BreadcrumbItem, BreadcrumbLink } from "@chakra-ui/react";
 import { useQuery } from "@tanstack/react-query";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { format } from "date-fns";
 import { formatBytes } from "@/utils/files";
 import { PageMetaDTO } from "@/services/dto/shared/page-meta-dto";
 import Pagination from "@/components/pagination/pagination";
 import { UploadModal } from "./components/upload-modal";
+import { FileIcon } from "./components/file-icon";
+import { TrHover } from "@/styles/styles";
 
-const fetchFiles = async (page = 1): Promise<PageMetaDTO<ReadFilesDTO>> => {
-  const res = await api.get<PageMetaDTO<ReadFilesDTO>>(`/storage/files?page=${page}`);
+const fetchFiles = async (page = 1, depth = 0): Promise<PageMetaDTO<ReadFilesDTO>> => {
+  const res = await api.get<PageMetaDTO<ReadFilesDTO>>(`/storage/files?page=${page}&depth=${depth}`);
   return res.data;
 };
 
@@ -22,19 +24,41 @@ const fetchStats = async (): Promise<{ size: number; count: number; average: num
 
 export const Storage = () => {
 
-  const { isOpen, onOpen, onClose } = useDisclosure();
   const toast = useToast();
+  const { isOpen, onOpen, onClose } = useDisclosure();
+  const drawerDisclosure = useDisclosure();
   const [page, setPage] = useState(1);
-  const { data: files, isError } = useQuery({
-    queryFn: () => fetchFiles(page),
-    queryKey: ["list-files", page],
+  const fileRef = useRef<any>();
+  const [currentFolder, setCurrentFolder] = useState({
+    depth: 0,
+    path: "/",
+  });
+
+  const { data: files, isError, refetch, } = useQuery({
+    queryFn: () => fetchFiles(page, currentFolder.depth),
+    queryKey: ["list-files", page, currentFolder.path],
     retry: false,
   });
+
   const { data: stats, isError: isErrorStats } = useQuery({
     queryFn: () => fetchStats(),
     queryKey: ["get-stats"],
     retry: false,
   });
+
+  const handleFileClick = async (file: ReadFilesDTO) => {
+    fileRef.current = file;
+    if (file.extension == "folder") {
+      setCurrentFolder({
+        depth: file.depth + 1,
+        path: file.path,
+      });
+      console.log(currentFolder);
+      await refetch();
+    } else {
+      drawerDisclosure.onOpen();
+    }
+  };
 
   useEffect(() => {
     if (isError) {
@@ -84,9 +108,18 @@ export const Storage = () => {
       <Card>
         <CardHeader>
           <div style={{ display: "flex", flexDirection: "row", justifyContent: "space-between" }}>
-            <Heading size="md">Files</Heading>
-            <div>
-              <Button onClick={onOpen}>Upload</Button>
+            <div style={{ display: "flex", alignItems: "center" }}>
+              <Breadcrumb>
+                {currentFolder.path.split("/").map((path, i) => (
+                  <BreadcrumbItem isCurrentPage key={i}>
+                    <BreadcrumbLink>{path}</BreadcrumbLink>
+                  </BreadcrumbItem>
+                ))}
+              </Breadcrumb>
+            </div>
+            <div style={{ display: "flex", gap: "20px" }}>
+              <Button colorScheme="blue" onClick={onOpen}>Upload</Button>
+              <Button>Create Folder</Button>
             </div>
           </div>
         </CardHeader>
@@ -103,12 +136,17 @@ export const Storage = () => {
               </Thead>
               <Tbody>
                 {files?.data && files.data.map((file) => (
-                  <Tr key={file.id}>
-                    <Td>{file.name}</Td>
+                  <TrHover key={file.id} as={Tr} onClick={() => handleFileClick(file)} ref={fileRef}>
+                    <Td>
+                      <div style={{ display: "flex", flexDirection: "row", alignItems: "center", gap: "10px" }}>
+                        <FileIcon extension={file.extension} />
+                        {file.name}
+                      </div>
+                    </Td>
                     <Td>{file.extension}</Td>
-                    <Td>{formatBytes(file.size)}</Td>
+                    <Td>{file.size > 0 && formatBytes(file.size)}</Td>
                     <Td>{format(file.createdAt, "dd/MM/yyyy HH:mm:ss")}</Td>
-                  </Tr>
+                  </TrHover>
                 ))}
               </Tbody>
             </Table>
@@ -127,7 +165,25 @@ export const Storage = () => {
           </div>
         </CardFooter>
       </Card>
-      <UploadModal isOpen={isOpen} onClose={onClose}/>
+      <UploadModal isOpen={isOpen} onClose={onClose} path={currentFolder.path} />
+      <Drawer
+        isOpen={drawerDisclosure.isOpen}
+        placement='right'
+        onClose={drawerDisclosure.onClose}
+        finalFocusRef={fileRef}
+        size="sm"
+      >
+        <DrawerContent>
+          <DrawerBody>
+            {fileRef.current?.name || "no file selected"}
+          </DrawerBody>
+          <DrawerFooter>
+            <Button variant='outline' mr={3} onClick={drawerDisclosure.onOpen} ref={fileRef}>
+              Close
+            </Button>
+          </DrawerFooter>
+        </DrawerContent>
+      </Drawer>
     </PageLayoyt>
   );
 };
