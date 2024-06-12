@@ -24,7 +24,7 @@ import { Button,
   Tabs, 
   useEditableControls 
 } from "@chakra-ui/react";
-import { Script } from "./tabs/script";
+import { Script } from "./tabs/script/script";
 
 export const CreateJobEditor = () => {
 

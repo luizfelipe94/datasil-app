@@ -1,6 +1,6 @@
 import { PageLayoyt } from "@/components/page-layout/page-layout";
 import { Tabs, Tab, TabList, TabPanel, TabPanels } from "@chakra-ui/react";
-import { Editor } from "./tabs/editor";
+import { Editor } from "./tabs/editor/editor";
 
 export const Catalog = () => {
   return (
